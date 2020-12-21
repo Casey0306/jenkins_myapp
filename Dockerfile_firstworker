@@ -4,8 +4,8 @@ FROM python:3.6
 # set the working directory in the container
 WORKDIR /my_app
 
-# copy the dependencies file to the working directory
-COPY requirements.txt .
+#git clone project repository
+RUN git clone https://github.com/Casey0306/jenkins_myapp.git
 
 # set env variables
 ENV DOCKER_SOCKET_TCP_CONNECT="tcp://ip_address:2375"
@@ -17,8 +17,5 @@ ENV AMQP_BACKEND_URL="db+postgresql://username:password@ip_address/db_name"
 # install dependencies
 RUN pip install -r requirements.txt
 
-# copy the content of the local src directory to the working directory
-COPY / .
-
 # command to run on container start
-CMD [ "celery", "-A", "jenkins.tasks", "worker", "--logfile", "/my_app/log/firstworker.log", "--loglevel=info", "-n", "firstworker" ]
+CMD [ "/jenkins_myapp/celery", "-A", "jenkins.tasks", "worker", "--logfile", "/my_app/log/firstworker.log", "--loglevel=info", "-n", "firstworker" ]
