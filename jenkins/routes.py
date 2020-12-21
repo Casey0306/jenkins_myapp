@@ -13,4 +13,4 @@ def hello_world():
 def build_image():
     data = request.get_json()
     build_image_docker.delay(data["tag"])
-    return jsonify({"response": "Task sent to the worker"})
+    return jsonify({"response": "Task sent to the worker!"})
