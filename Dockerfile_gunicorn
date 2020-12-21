@@ -1,0 +1,24 @@
+# set base image (host OS)
+FROM python:3.6
+
+# set the working directory in the container
+WORKDIR /my_app
+
+# copy the dependencies file to the working directory
+COPY requirements.txt .
+
+# set env variables
+ENV DOCKER_SOCKET_TCP_CONNECT="tcp://ip_address:2375"
+ENV WORKDIR_APP="/my_app"
+ENV URL_GIT_CLONE="https://github.com/Casey0306/openstack_poject.git"
+ENV AMQP_BROKER_URL="amqp://username:password@ip_address:5672/virtual_host_name"
+ENV AMQP_BACKEND_URL="db+postgresql://username:password@ip_address/db_name"
+
+# install dependencies
+RUN pip install -r requirements.txt
+
+# copy the content of the local src directory to the working directory
+COPY / .
+
+# command to run on container start
+CMD [ "gunicorn", "run:app", "-w", "2", "--threads", "2", "-b", "0.0.0.0:8000" ]
