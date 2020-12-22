@@ -14,13 +14,13 @@ def build_image_docker(imagetag):
         apidocker = DockerApi(docker_url=varenv.DOCKER_SOCKET_TCP_CONNECT,
                               workdir=varenv.WORKDIR_APP)
         session = apidocker.connect()
-        if apidocker.check_image_tag_use(session=session,
-                                         tag_name=imagetag):
-            folder_name = 'openstack' + imagetag
+        folder_name = 'openstack' + imagetag
+        path = os.path.join(varenv.WORKDIR_APP, folder_name)
+        if apidocker.check_image_tag_use(
+                session=session, tagname=imagetag) and not os.path.isdir(path):
             apigit.clone_from_git(folder=folder_name)
             apidocker.image_build(session=session,
                                   image_tag=imagetag, folder=folder_name)
-            path = os.path.join(varenv.WORKDIR_APP, folder_name)
             shutil.rmtree(path, ignore_errors=False)
         else:
             print('Image_tag is already used')

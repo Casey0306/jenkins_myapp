@@ -18,12 +18,17 @@ class DockerApi:
         for line in log:
             print(line)
 
-    def check_image_tag_use(self, session, tag_name):
+    def check_image_tag_use(self, session, tagname):
         list_image_tag = []
-        for image in session.images.list():
-            list_image_tag.append(image.tags[0])
-        if tag_name in list_image_tag:
-            return None
+        list_images = session.images.list()
+        if list_images:
+            for image in list_images:
+                if image.tags:
+                    for image_tag in image.tags:
+                        list_image_tag.append(image_tag)
+            if list_image_tag:
+                if tagname in list_image_tag:
+                    return None
         return not None
 
     def check_image_created(self, session, image_created):
